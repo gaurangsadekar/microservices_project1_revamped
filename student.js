@@ -141,19 +141,11 @@ var queryForCheckingExistenceOfPair;
 
 if(lname == 'all')
 {
+    queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1", [courseno]);
+    queryForCheckingExistenceOfPair.on('row', function(row){
+
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
     query = client.query(queryForCourseStudentDatabase, [courseno]);
-    queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1", [courseno]);
-}
-else
-{
-	queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where lname = $1 and courseno = $2';
-	query = client.query(queryForCourseStudentDatabase, [lname,courseno]);
-	queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname]);
-}
-
-
-queryForCheckingExistenceOfPair.on('row', function(row){
 
 	query.on('end', function(result) {
 
@@ -169,5 +161,28 @@ queryForCheckingExistenceOfPair.on('row', function(row){
 	//client.end();
 });
 });
+}
+else
+{
+	queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname]);
+	    queryForCheckingExistenceOfPair.on('row', function(row){
 
+    queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
+    query = client.query(queryForCourseStudentDatabase, [courseno]);
+
+	query.on('end', function(result) {
+
+		message =   {
+										"origin":"student" ,
+										"event":"course_removed_from_student",
+										"lname" : lname,
+										"courseno" : courseno
+								};
+			 console.log(typeof(message.origin));
+			 publisher.publish('RI', JSON.stringify(message));
+	console.log("Row successfully deleted");
+	//client.end();
+});
+});
+}
 }
