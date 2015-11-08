@@ -94,26 +94,60 @@ router.route('/course/:course_id')
 
 
 
+    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
+    router.route('/course/:course_id/students')
 
-router.route('/studentcourse')
+    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
+    .get(function(req, res) {
 
-//create a new student (accessed at POST http://localhost:16386/api/student)
-.post(function(req, res) {
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
+    })
 
-          course.addStudentToCourse(req);
-          res.json({message : 'Student added to course!'});
+    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
+    .post(function(req, res) {
+
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
     });
 
-router.route('/studentcourse/:student_id/:course_id')
 
+    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
+    router.route('/course/:course_id/students/:student_id')
 
-//create a new student (accessed at POST http://localhost:16386/api/student)
-.delete(function(req, res) {
+    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
+    .get(function(req, res) {
 
-    course.deleteStudentFromCourse(req);
-    res.json({message : 'Student deleted from course!'});
-	  });
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
+    })
 
+    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
+    .delete(function(req, res) {
+
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
+    });
 
 // Listening for RI scenes
 var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});

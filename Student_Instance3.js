@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
-var port = process.env.PORT || 16386;        // set our port
+var port = process.env.PORT || 16388;        // set our port
 
 
 // ROUTES FOR OUR API
@@ -106,32 +106,25 @@ router.route('/student/:student_id')
 
 
 
-    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/student/:student_id/courses')
+router.route('/coursestudent')
 
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
+//create a new student (accessed at POST http://localhost:16386/api/student)
+.post(function(req, res) {
 
+  student.addCoursetoStudent(req);
+  res.json({ message: 'Added course to student'});
 
-    })
-
-    .post(function(req, res) {
-
-
-    });
-    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/student/:student_id/courses/:course_id')
-
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
+});
 
 
-    })
+router.route('/coursestudent/:course_id/:student_id')
 
-    .delete(function(req, res) {
+//create a new student (accessed at POST http://localhost:16386/api/student)
+.delete(function(req, res) {
 
-
-    });
+  student.deleteCourseFromStudent(req);
+    res.json({ message: 'Deleted course from student'});
+  });
 
 
 
