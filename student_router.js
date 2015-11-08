@@ -196,35 +196,33 @@ router.route('/student/:student_id')
 
     });
 
-// API endpoint for getting courses of a particular student
-router.route('/student/:student_id/courses')
+    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
+    router.route('/student/:student_id/course')
 
-// get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-.get(function(req, res) {
+    .post(function(req, res) {
 
-  invokeandProcessResponse(req , function(err, result){
-    if(err){
-      res.send(500, { error: 'something blew up' });
-    } else {
-      res.send(result);
-    }
-  });
-});
-//API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-router.route('/student/:student_id/courses/:course_id')
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
+    });
+    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
+    router.route('/student/:student_id/course/:course_id')
 
-// get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-.get(function(req, res) {
+    
+    .delete(function(req, res) {
 
-  invokeandProcessResponse(req , function(err, result){
-    if(err){
-      res.send(500, { error: 'something blew up' });
-    } else {
-      res.send(result);
-    }
-  });
-});
-
+      invokeandProcessResponse(req , function(err, result){
+        if(err){
+          res.send(500, { error: 'something blew up' });
+        } else {
+          res.send(result);
+        }
+      });
+    });
 
 //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
 
