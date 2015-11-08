@@ -211,7 +211,7 @@ router.route('/student/:student_id/courses')
   });
 });
 //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-router.route('/student/:student_id/course/:course_id')
+router.route('/student/:student_id/courses/:course_id')
 
 // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
 .get(function(req, res) {

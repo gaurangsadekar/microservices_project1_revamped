@@ -3,7 +3,6 @@ var config = require('./config.json');
 //console.log(config);
 
 var arr = Object.keys(config).map(function(k) { return config[k] });
-//console.log(arr[0].listener);
 
 var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});
 subscriber.on('connect', function() {
@@ -21,7 +20,6 @@ subscriber.on("message", function(channel, message) {
   console.log("Got message" + message);
 	messageEvent = JSON.parse(message);
 	console.log(messageEvent);
-
 	origin_from_message = messageEvent.origin;
 	event_from_message = messageEvent.event;
 
