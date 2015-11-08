@@ -56,15 +56,24 @@ console.log("Row successfully inserted");
 
 exports.getStudentDetails = function(req,res,callback)
 {
+var course_nos = [];
+var responseJson;
 console.log('Connected to database');
 console.log(req.params.student_id);
-var query = client.query("Select * from ms_student_tbl where lname= $1", [req.params.student_id]);
+var query = client.query("Select * from ms_student_tbl left outer join ms_student_course_tbl on (ms_student_tbl.lname = ms_student_course_tbl.lname) where ms_student_tbl.lname= $1", [req.params.student_id]);
 query.on('row', function(row) {
-console.log('Row received') ;
-res.json({fname:row.fname, lname:row.lname, sid:row.id, phno:row.phno, degree:row.degree, year:row.year, address:row.address});
+	console.log(row.courseno);
+	console.log(str);
+	course_nos.push(row.courseno);
+	responseJson = "{'fname':"+ row.fname + ", 'lname':" + req.params.student_id + ", 'sid':"+ row.sid + ", 'phno' :" + row.phno + ", 'degree_level':" + row.degree_level + ", 'year' :" + row.year + ", 'address':" + row.address + ", 'course_nos': " + course_nos + "}";
+  });
+query.on('end', function(result){
+	console.log(responseJson);
+	res.json(responseJson);
 	callback(res);
-	 });
+});
 }
+
 
 
 exports.updateStudent = function(req)

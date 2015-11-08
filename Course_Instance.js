@@ -121,32 +121,23 @@ router.route('/course/:course_id')
       });
     });
 
+router.route('/course/:course_id/student')
+
+   .post(function(req, res) {
+        course.addStudentToCourse(req);
+         res.json({ message: 'Added Student to Course'})
+     });
 
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/course/:course_id/students/:student_id')
 
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
-
-      invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
-      });
-    })
 
     // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
     .delete(function(req, res) {
 
-      invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
-      });
+      course.deleteStudentFromCourse(req);
+      res.json({ message: 'Student deleted from course'});
+      
     });
 
 // Listening for RI scenes
