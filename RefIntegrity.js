@@ -1,4 +1,4 @@
-var redis = require('redis');
+package.jsonvar redis = require('redis');
 var config = require('./config.json');
 //console.log(config);
 
