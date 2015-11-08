@@ -1,0 +1,38 @@
+{
+  "course_added_to_student":
+			{
+				"event":"course_added_to_student",
+				"origin": "student",
+				"listener":"course"
+			}
+ , "course_removed_from_student" :
+			 {
+			 	"event":"course_removed_from_student",
+				"origin": "student",
+				"listener":"course"
+			 }
+ , "course_removed_from_all":
+ 			{
+			 	"event":"course_removed_from_all",
+				"origin": "course",
+				"listener":"student"
+ 			}
+ , "student_added_to_course":
+ 			{
+				"event":"student_added_to_course",
+				"origin": "course",
+				"listener":"student"
+			}
+ , "student_removed_from_course":
+			{
+				"event":"student_removed_from_course",
+				"origin": "course",
+				"listener":"student"
+			}
+ , "student_removed_from_all":
+ 			{
+				"event":"student_removed_from_all",
+				"origin": "student",
+				"listener":"course"
+			}
+}
