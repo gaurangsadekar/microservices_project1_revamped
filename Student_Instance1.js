@@ -97,8 +97,35 @@ router.route('/student/:student_id')
     .put(function(req, res) {
     	//Logic to update student details here
 
-      student.updateStudent(req);
-    	res.json({ message: 'Student updated!' });
+      student.updateStudent(req,res,handleResult);
+      function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log(response);
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Student updated!'})
+
+          }
+
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'})
+
+          }
+           else if(response.statusCode == 400){
+            console.log('400');
+            res.status(400);
+            res.json({ message: 'Bad request. Please check body parameters.'})
+
+          }
+
+
+        }
+    	//res.json({ message: 'Student updated!' });
 
 
     });
