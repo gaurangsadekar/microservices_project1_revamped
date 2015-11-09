@@ -63,7 +63,7 @@ router.route('/student')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Student updated!'});
+            res.json({ message: 'Student added!'});
 
           }
 
@@ -208,7 +208,7 @@ router.route('/student/:student_id/course')
            else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Expectation Failed. Adding Course to Student that does not exist.'});
+            res.json({ message: 'Expectation Failed. Invalid Operation.'});
 
           }
         }

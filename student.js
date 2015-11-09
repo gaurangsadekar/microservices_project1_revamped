@@ -56,7 +56,6 @@ if(rowCount == 0)
 {
 var query = client.query("insert into ms_student_course_tbl values($1, $2)", [lname,courseno], function(err)
 {
-
 	if(err)
 	{
 	console.log('Trying to add course to a student that does not exist');
@@ -223,7 +222,7 @@ exports.deleteStudent = function(req, res, callback)
 
 
 
-exports.deleteCourseFromStudent = function(req,res,callback)
+exports.deleteCourseFromStudent = function(req)
 {
 
 var courseno = req.params.course_id;
