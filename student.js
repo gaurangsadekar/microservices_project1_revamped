@@ -63,7 +63,6 @@ console.log(req.params.student_id);
 var query = client.query("Select * from ms_student_tbl left outer join ms_student_course_tbl on (ms_student_tbl.lname = ms_student_course_tbl.lname) where ms_student_tbl.lname= $1", [req.params.student_id]);
 query.on('row', function(row) {
 	console.log(row.courseno);
-	console.log(str);
 	course_nos.push(row.courseno);
 	responseJson = "{'fname':"+ row.fname + ", 'lname':" + req.params.student_id + ", 'sid':"+ row.sid + ", 'phno' :" + row.phno + ", 'degree_level':" + row.degree_level + ", 'year' :" + row.year + ", 'address':" + row.address + ", 'course_nos': " + course_nos + "}";
   });
@@ -143,20 +142,18 @@ exports.deleteStudent = function(req)
 
 	var query = client.query(queryForRelationshipDatabase, [student_lname]);
 	query.on('end', function(result) {
-	console.log("Row successfully deleted");
-
-
+    console.log("Deleted from relationship");
 	var relationshipDeleteQuery = client.query(queryForStudentDatabase, [student_lname]);
-	query.on('end', function(result) {
-		// message =   {
-		// 								"origin":"student" ,
-		// 								"event":"student_removed_from_all",
-		// 								"lname" : lname,
-		// 								"courseno" : "all"
-		// 						};
-		// 	 console.log(typeof(message.origin));
-		// 	 publisher.publish('RI', JSON.stringify(message));
-
+	relationshipDeleteQuery.on('end', function(result) {
+    console.log("Deleted from student table");
+		message =   {
+										"origin":"student" ,
+										"event":"student_removed_from_all",
+										"lname" : student_lname,
+										"courseno" : "All"
+								};
+			 console.log(typeof(message.origin));
+			 publisher.publish('RI', JSON.stringify(message));
 	console.log("Row successfully deleted");
 });
 });
@@ -176,9 +173,9 @@ var query;
 var queryForCheckingExistenceOfPair;
 
 
-if(lname == 'all')
+if(lname == 'All')
 {
-    queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1", [courseno]);
+    queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 limit 1", [courseno]);
     queryForCheckingExistenceOfPair.on('row', function(row){
 
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';

@@ -66,7 +66,14 @@ var invokeandProcessResponse = function(req, callback){
     bodyParameters = req.body;
     if(req.method == "POST" )
     {
-      firstCharacterString = bodyParameters['lastname'];
+      if(req.url.split('/')[3] == "course")
+      {
+        firstCharacterString = req.url.split('/')[2];
+      }
+      else {
+          firstCharacterString = bodyParameters['lname'];
+      }
+
 
     }
     else if (req.method == "GET" || req.method == "PUT" || req.method == "DELETE")
@@ -212,7 +219,7 @@ router.route('/student/:student_id')
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/student/:student_id/course/:course_id')
 
-    
+
     .delete(function(req, res) {
 
       invokeandProcessResponse(req , function(err, result){
@@ -253,10 +260,10 @@ subscriber.on("message", function(channel, message) {
       console.log("Event:" + arr[key].event);
       if (arr[key].req_method == "DELETE") {
         console.log(arr[key].req_method);
-        url = arr[key].publicurl + "/" + courseno + "/" + lname;
+        url = arr[key].publicurl + lname + arr[key].extension + courseno;
       }
       else {
-        url = arr[key].publicurl;
+        url = arr[key].publicurl + lname + arr[key].extension;
       }
       request( { url : url,
    		   method : arr[key].req_method,
@@ -282,4 +289,4 @@ app.use('/api', router);
 app.listen(port);
 console.log('Magic happens on port ' + port);
 
-//subscriber.subscribe("student");
+subscriber.subscribe("student");

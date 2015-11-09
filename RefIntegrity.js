@@ -27,16 +27,11 @@ subscriber.on("message", function(channel, message) {
 	console.log("Event-" + event_from_message);
 
 	for(var key in arr){
-    console.log("Origin :" + arr[key].origin );
-    console.log("Event :"+ arr[key].event);
+
 		if((origin_from_message == arr[key].origin) && (event_from_message == arr[key].event)){
-
-			console.log("Origin :" + arr[key].origin );
-			console.log("Inside Redis :"+ arr[key].listener);
+			console.log("Inside Redis Listener :"+ arr[key].listener);
 			publisher.publish(arr[key].listener, JSON.stringify(messageEvent));
-
 			}
-
 	}
 	});
 

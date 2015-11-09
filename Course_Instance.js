@@ -93,34 +93,6 @@ router.route('/course/:course_id')
     });
 
 
-
-    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/course/:course_id/students')
-
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
-
-      invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
-      });
-    })
-
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .post(function(req, res) {
-
-      invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
-      });
-    });
-
 router.route('/course/:course_id/student')
 
    .post(function(req, res) {
@@ -129,7 +101,7 @@ router.route('/course/:course_id/student')
      });
 
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/course/:course_id/students/:student_id')
+    router.route('/course/:course_id/student/:student_id')
 
 
     // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
@@ -137,7 +109,7 @@ router.route('/course/:course_id/student')
 
       course.deleteStudentFromCourse(req);
       res.json({ message: 'Student deleted from course'});
-      
+
     });
 
 // Listening for RI scenes
@@ -158,10 +130,11 @@ subscriber.on("message", function(channel, message) {
 
   for(var key in arr){
 		if(messageEvent == arr[key].event){
+      console.log(messageEvent);
       if (arr[key].req_method == "DELETE")
-        url = arr[key].publicurl + "/" + lname + "/" + courseno;
+        url = arr[key].publicurl + courseno + arr[key].extension + lname;
       else
-        url = arr[key].publicurl;
+        url = arr[key].publicurl + courseno + arr[key].extension;
       request({ url : url,
    		   method : arr[key].req_method,
    		   json : parsedMessage
