@@ -103,34 +103,24 @@ router.route('/student/:student_id')
 
     });
 
+router.route('/student/:student_id/course')
 
+   .post(function(req, res) {
+        student.addCoursetoStudent(req);
+         res.json({ message: 'Added course to student'})
+     });
 
-
-    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/student/:student_id/courses')
-
-    // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
-
-
-    })
-
-    .post(function(req, res) {
-
-
-    });
-    //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
-    router.route('/student/:student_id/courses/:course_id')
+//API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
+router.route('/student/:student_id/course/:course_id')
 
     // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
-    .get(function(req, res) {
+    // .get(function(req, res) {
 
-
-    })
-
+    // })
     .delete(function(req, res) {
 
-
+      student.deleteCourseFromStudent(req);
+      res.json({ message: 'Course deleted from student'});
     });
 
 

@@ -1,21 +1,24 @@
 {"student_added_to_course":
 			{
 				"event":"student_added_to_course",
-        "publicurl":"http://localhost:16385/api/coursestudent",
+        "publicurl":"http://localhost:16385/api/student/",
+				"extension":"/course/",
         "req_method":"POST"
 			}
  ,
  "student_removed_from_course":
 			{
 				"event":"student_removed_from_course",
-        "publicurl":"http://localhost:16385/api/coursestudent",
+        "publicurl":"http://localhost:16385/api/student/",
+				"extension":"/course/",
         "req_method":"DELETE"
 			}
  ,
 "course_removed_from_all":
  			{
  				"event":"course_removed_from_all",
-         "publicurl":"http://localhost:16385/api/coursestudent",
-         "req_method":"DELETE"
+        "publicurl":"http://localhost:16385/api/student/",
+				"extension":"/course/",
+        "req_method":"DELETE"
  			}
 }
