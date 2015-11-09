@@ -1,18 +1,18 @@
 var pg = require('pg');
 var connectionString = 'postgres://postgres:postgres@localhost:5433/infinity_student_db';
-//var redis = require('redis');
+var redis = require('redis');
 var client = new pg.Client(connectionString);
 client.connect();
 
-// var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});
-// subscriber.on('connect', function() {
-//     console.log('Connected to Subscriber Redis');
-// });
+var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});
+subscriber.on('connect', function() {
+    console.log('Connected to Subscriber Redis');
+});
 
-// var publisher = redis.createClient(6379, 'localhost' , {no_ready_check: true});
-// publisher.on('connect', function() {
-//     console.log('Connected to Publisher Redis');
-// });
+var publisher = redis.createClient(6379, 'localhost' , {no_ready_check: true});
+publisher.on('connect', function() {
+     console.log('Connected to Publisher Redis');
+ });
 
 
 
@@ -74,14 +74,14 @@ var query = client.query("insert into ms_student_course_tbl values($1, $2)", [ln
 			{
 				res.status(200);
 				console.log("Row successfully inserted");
-					// message =   {
-	   //                    "origin":"student" ,
-	   //                    "event":"course_added_to_student",
-				// 								"lname" : lname,
-				// 								"courseno" : courseno
-	   //                };
-	   //       console.log(typeof(message.origin));
-	   //       publisher.publish('RI', JSON.stringify(message));
+					message =   {
+	                      "origin":"student" ,
+	                      "event":"course_added_to_student",
+												"lname" : lname,
+												"courseno" : courseno
+	                  };
+	         console.log(typeof(message.origin));
+	         publisher.publish('RI', JSON.stringify(message));
 			}
 			
 
@@ -206,15 +206,15 @@ exports.deleteStudent = function(req, res, callback)
 		{
 			res.status(200);
 			 console.log("Deleted from student table");
-		// message =   {
-		// 								"origin":"student" ,
-		// 								"event":"student_removed_from_all",
-		// 								"lname" : student_lname,
-		// 								"courseno" : "All"
-		// 						};
-		// 	 console.log(typeof(message.origin));
-		// 	 publisher.publish('RI', JSON.stringify(message));
-	 //         console.log("Row successfully deleted");
+		message =   {
+										"origin":"student" ,
+										"event":"student_removed_from_all",
+										"lname" : student_lname,
+										"courseno" : "All"
+								};
+			 console.log(typeof(message.origin));
+			 publisher.publish('RI', JSON.stringify(message));
+	         console.log("Row successfully deleted");
 		} 
 		callback(res);
 });
@@ -244,14 +244,14 @@ if(lname == 'All')
 
 	query.on('end', function(result) {
 
-		// message =   {
-		// 								"origin":"student" ,
-		// 								"event":"course_removed_from_student",
-		// 								"lname" : lname,
-		// 								"courseno" : courseno
-		// 						};
-		// 	 console.log(typeof(message.origin));
-		// 	 publisher.publish('RI', JSON.stringify(message));
+		message =   {
+										"origin":"student" ,
+										"event":"course_removed_from_student",
+										"lname" : lname,
+										"courseno" : courseno
+								};
+			 console.log(typeof(message.origin));
+			 publisher.publish('RI', JSON.stringify(message));
 	console.log("Row successfully deleted");
 	//client.end();
 });
@@ -267,14 +267,14 @@ else
 
 	query.on('end', function(result) {
 
-		// message =   {
-		// 								"origin":"student" ,
-		// 								"event":"course_removed_from_student",
-		// 								"lname" : lname,
-		// 								"courseno" : courseno
-		// 						};
-		// 	 console.log(typeof(message.origin));
-		// 	 publisher.publish('RI', JSON.stringify(message));
+		message =   {
+										"origin":"student" ,
+										"event":"course_removed_from_student",
+										"lname" : lname,
+										"courseno" : courseno
+								};
+			 console.log(typeof(message.origin));
+			 publisher.publish('RI', JSON.stringify(message));
 	console.log("Row successfully deleted");
 	//client.end();
 });
