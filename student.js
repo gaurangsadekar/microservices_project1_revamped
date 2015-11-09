@@ -1,5 +1,5 @@
 var pg = require('pg');
-var connectionString = 'postgres://postgres:postgres@localhost:5433/infinity_student_db';
+var connectionString = 'postgres://postgres:postgres@localhost:5432/infinity_student_db';
 var redis = require('redis');
 var client = new pg.Client(connectionString);
 client.connect();
@@ -31,14 +31,14 @@ if(err)
  {
  	query.on('end', function(error, result) {
      if(error){
-     res.status(500);	
+     res.status(500);
       }
 
 //No error
 else{
 	res.status(200);
 	console.log("Successfully added student.");
-    }    
+    }
  });
  }
  callback(res);
@@ -83,7 +83,7 @@ var query = client.query("insert into ms_student_course_tbl values($1, $2)", [ln
 	         console.log(typeof(message.origin));
 	         publisher.publish('RI', JSON.stringify(message));
 			}
-			
+
 
 });
 	}
@@ -121,7 +121,7 @@ query.on('end', function(result){
     }
     else
     {
-     res.json({message:'Student does not exist'});
+     res.json({message:'Student does not exist', returnStatus : '404'});
     }
 	callback(res);
 });
@@ -153,7 +153,7 @@ var query = client.query(queryString, [student_lname], function(err)
   {
   console.log('error');
   res.status(400);
-  callback(res); 
+  callback(res);
   }
   else
   {
@@ -169,10 +169,10 @@ if(result.rowCount == 0)
 
 //No error
 else{
-	res.status(200);	
+	res.status(200);
 	console.log("Row successfully updated");
 	callback(res);
-   }	
+   }
 	//client.end();
 });
 }
@@ -215,7 +215,7 @@ exports.deleteStudent = function(req, res, callback)
 			 console.log(typeof(message.origin));
 			 publisher.publish('RI', JSON.stringify(message));
 	         console.log("Row successfully deleted");
-		} 
+		}
 		callback(res);
 });
 });
@@ -223,7 +223,7 @@ exports.deleteStudent = function(req, res, callback)
 
 
 
-exports.deleteCourseFromStudent = function(req,res,callback)
+exports.deleteCourseFromStudent = function(req)
 {
 
 var courseno = req.params.course_id;

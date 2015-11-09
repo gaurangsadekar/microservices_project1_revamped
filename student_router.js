@@ -36,15 +36,10 @@ router.use(function(req, res, next) {
 router.get('/', function(req, res) {
 
   invokeandProcessResponse(req , function(err, result){
-    if(err){
-      res.send(500, { error: 'something blew up' });
-    } else {
-      res.send(result);
-    }
+    res.status(result.returnStatus);
+    res.send(result);
   });
 });
-
-
 
 var invokeandProcessResponse = function(req, callback){
   var query = client.query("select * from tbl_rules");
@@ -102,20 +97,15 @@ var invokeandProcessResponse = function(req, callback){
         method : req.method,
         json : bodyParameters
       }, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
+        console.log("Inside Invoke");
+        console.log(response.status);
+        console.log(response);
        callback(null, response.body);
-      } else {
-        callback(error);
-      }
     })
   });
 }
-  // m
-
-
 // more routes for our API will happen here
 router.route('/studentRouter/:ruleId')
-
 // create a new student (accessed at POST http://localhost:8080/api/student)
 .put(function(req, res) {
   console.log("Updating " + req.body['instanceurl'] + " with rule id " + req.url.split('/')[2]);
@@ -124,11 +114,8 @@ router.route('/studentRouter/:ruleId')
         console.log("Updated " + req.body['instanceurl'] + " with rule id " + req.url.split('/')[2]);
           res.json({message : 'Updated'});
     });
-
-
   //     res.json({ message: 'Student created!' });
   //Logic to save the student to db
-
 });
 
 /************************************************************
@@ -136,26 +123,15 @@ router.route('/studentRouter/:ruleId')
 * Student API Endpoints
 *
 *************************************************************/
-
-
 //API endpoint to add student to the students table
 router.route('/student')
-
     // create a new student (accessed at POST http://localhost:8080/api/student)
     .post(function(req, res) {
 
-
     	invokeandProcessResponse(req , function(err, result){
-    	    if(err){
-    	      res.send(500, { error: 'something blew up' });
-    	    } else {
+            res.status(result.returnStatus);
     	      res.send(result);
-    	    }
     	  });
-
-       // res.json({ message: 'Student created!' });
-        //Logic to save the student to db
-
     });
 
 
@@ -167,67 +143,42 @@ router.route('/student/:student_id')
     .get(function(req, res) {
 
 		invokeandProcessResponse(req , function(err, result){
-	    if(err){
-	      res.send(500, { error: 'something blew up' });
-	    } else {
-	      res.send(result);
-	    }
+      res.status(result.returnStatus);
+      res.send(result);
 	  });
-
-
     })
 
 	// update the student with this id (accessed at PUT http://localhost:8080/api/student/:student_id)
     .put(function(req, res) {
-
     	invokeandProcessResponse(req , function(err, result){
-    	    if(err){
-    	      res.send(500, { error: 'something blew up' });
-    	    } else {
-    	      res.send(result);
-    	    }
+        res.status(result.returnStatus);
+        res.send(result);
     	  });
-
     })
 
-
     .delete(function(req, res) {
-
     	invokeandProcessResponse(req , function(err, result){
-    	    if(err){
-    	      res.send(500, { error: 'something blew up' });
-    	    } else {
-    	      res.send(result);
-    	    }
+        res.status(result.returnStatus);
+        res.send(result);
     	  });
 
     });
 
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/student/:student_id/course')
-
     .post(function(req, res) {
-
       invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
+        res.status(result.returnStatus);
+        res.send(result);
       });
     });
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/student/:student_id/course/:course_id')
-
-
     .delete(function(req, res) {
 
       invokeandProcessResponse(req , function(err, result){
-        if(err){
-          res.send(500, { error: 'something blew up' });
-        } else {
-          res.send(result);
-        }
+        res.status(result.returnStatus);
+        res.send(result);
       });
     });
 
