@@ -210,7 +210,7 @@ router.route('/student/:student_id/course')
            else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Expectation Failed. Adding Course to Student that does not exist.', returnStatus : '417'});
+            res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
 
           }
         }

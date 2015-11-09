@@ -50,10 +50,31 @@ router.route('/course')
 
     // create a new course (accessed at POST http://localhost:16390/api/course)
     .post(function(req, res) {
-          course.addCourse(req);
+      course.addCourse(req, res, handleResult);
+      function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Course added!'});
 
-          res.json({message : 'Course added!'});
+          }
 
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'});
+
+          }
+           else if(response.statusCode == 409){
+            console.log('409');
+            res.status(409);
+            res.json({ message: 'Course already exists.'});
+
+          }
+        }
     });
 
 
@@ -79,16 +100,68 @@ router.route('/course/:course_id')
     })
 	// update the student with this id (accessed at PUT http://localhost:16390/api/course/:course_id)
     .put(function(req, res) {
-    	//Logic to upadte student details
-     course.updateCourse(req);
-    	res.json({ message: 'Course updated!' });
+    	//Logic to update student details
+      course.updateCourse(req, res, handleResult);
+      function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Course updated!'});
 
+          }
+
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'});
+
+          }
+           else if(response.statusCode == 400){
+            console.log('400');
+            res.status(400);
+            res.json({ message: 'Bad request. Please check body parameters.'});
+
+          }
+            else if(response.statusCode == 417){
+            console.log('417');
+            res.status(417);
+            res.json({ message: 'Updating a course that does not exist'});
+          }
+        }
     })
+
     .delete(function(req, res) {
     	//Logic to upadte student details
 
-         course.deleteCourse(req);
-    	res.json({ message: 'Course deleted!' });
+      course.deleteCourse(req, res, handleResult);
+    	 function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log(response);
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Successfully deleted course'});
+
+          }
+
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'});
+
+          }
+           else if(response.statusCode == 417){
+            console.log('417');
+            res.status(417);
+            res.json({ message: 'Expectation Failed. Deleting a course that does not exist'});
+
+          }
+        }
 
     });
 
@@ -96,9 +169,32 @@ router.route('/course/:course_id')
 router.route('/course/:course_id/student')
 
    .post(function(req, res) {
-        course.addStudentToCourse(req);
-         res.json({ message: 'Added Student to Course'})
-     });
+     course.addStudentToCourse(req,res,handleResult);
+         function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log(response);
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Course added!'});
+
+          }
+
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'});
+
+          }
+           else if(response.statusCode == 417){
+            console.log('417');
+            res.status(417);
+            res.json({ message: 'Expectation Failed. Adding Student to Course that does not exist.'});
+
+          }
+        }
 
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/course/:course_id/student/:student_id')
@@ -107,8 +203,32 @@ router.route('/course/:course_id/student')
     // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
     .delete(function(req, res) {
 
-      course.deleteStudentFromCourse(req);
-      res.json({ message: 'Student deleted from course'});
+      course.deleteStudentFromCourse(req,res,handleResult);
+     function handleResult(response)
+        {
+          console.log('Callback received');
+          console.log(response);
+          console.log("Status code " +response.statusCode);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: 'Course updated!'});
+
+          }
+
+          else if(response.statusCode == 500){
+            console.log('500');
+            res.status(500);
+            res.json({ message: 'Internal Server Error!'});
+
+          }
+           else if(response.statusCode == 417){
+            console.log('417');
+            res.status(417);
+            res.json({ message: 'Expectation Failed. Invalid operation'});
+
+          }
+        }
 
     });
 
