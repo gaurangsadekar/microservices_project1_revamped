@@ -43,6 +43,38 @@ router.get('/', function(req,res) {
   });
 
 });
+var invokeandProcessResponseGet = function(req, callback){
+  var instancetoRouteTo;
+  var reqMethod;
+  var bodyParameters;
+  console.log(req.body);
+  console.log(JSON.stringify(req.body));
+  if(req.method == 'GET')
+  {
+    if(req.url.split('/')[1] == "student")
+    {
+      instanceToRouteTo = 'http://localhost:16390/api/';
+      instanceToRouteTo += "course/" + req.body.courseno;
+    }
+    else if (req.url.split('/')[1] == "course")
+    {
+      instanceToRouteTo = 'http://localhost:16385/api/';
+      instanceToRouteTo += "student/" + req.body.lname;
+    }
+    reqMethod = "GET";
+    bodyParameters = "";
+  }
+
+  console.log('Sending ' +req.method+ ' request to ' + instanceToRouteTo);
+  request({ url : instanceToRouteTo,
+    method : req.method,
+    json : bodyParameters
+  }, function (error, response, body) {
+      console.log(response.body);
+      console.log(body);
+      callback(null, response.body);
+  })
+}
 
 var invokeandProcessResponse = function(req, callback){
   var instancetoRouteTo;
@@ -185,25 +217,34 @@ router.route('/student/:student_id/course')
 .post(function(req, res) {
   bodyParameters = req.body;
   var courseno = bodyParameters.courseno;
-  request({ url : "http://localhost:16390/api/course/" + courseno,
-    method : GET,
-    json : bodyParameters
-  }, function (error, response, body) {
-    if(response.statusCode == 200)
+  var newRequest = req;
+  newRequest.method = "GET";
+  invokeandProcessResponseGet(newRequest , function(err, result){
+  // var newResult = ({message : result.message});
+  // res.status(result.returnStatus);
+  // res.send(newResult);
+    console.log("Inside first callback of ref integrity check");
+    //callback(null, response.body);
+    result = JSON.parse(result);
+    console.log("This is get " + result.returnStatus);
+    if(result.returnStatus == "200")
     {
-    invokeandProcessResponse(req , function(err, result){
+      req.method = "POST";
+      invokeandProcessResponse(req , function(err, result){
+      console.log("Inside second callback");
+      console.log(result.message);
       var newResult = ({message : result.message});
       res.status(result.returnStatus);
       res.send(newResult);
-      callback(null, response.body);
-    });
-  }
-  else
-  {
-    console.log('417');
-    res.status(417);
-    res.json({ message: 'Expectation Failed. Adding student to a course that does not exist'});
-  }
+      //callback(null, response.body);
+      });
+    }
+    else
+    {
+    console.log('404');
+    res.status(404);
+    res.json({ message: 'Expectation Failed. Adding course to a student that does not exist or course does not exist.'});
+    }
   });
 });
 //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
@@ -227,6 +268,7 @@ router.route('/course')
 .post(function(req, res) {
   invokeandProcessResponse(req , function(err, result){
     var newResult = ({message : result.message});
+    console.log(newResult);
     res.status(result.returnStatus);
     res.send(newResult);
   });
@@ -267,26 +309,35 @@ router.route('/course/:course_id/student')
 // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
 .post(function(req, res) {
   bodyParameters = req.body;
-  var studentId = bodyParameters.sid;
-  request({ url : "http://localhost:16385/api/student/" + studentId,
-    method : GET,
-    json : bodyParameters
-  }, function (error, response, body) {
-    if(response.statusCode == 200)
+  var courseno = bodyParameters.courseno;
+  var newRequest = req;
+  newRequest.method = "GET";
+  invokeandProcessResponseGet(newRequest , function(err, result){
+  // var newResult = ({message : result.message});
+  // res.status(result.returnStatus);
+  // res.send(newResult);
+    console.log("Inside first callback of ref integrity check");
+    //callback(null, response.body);
+    result = JSON.parse(result);
+    console.log("This is get " + result.returnStatus);
+    if(result.returnStatus == "200")
     {
-    invokeandProcessResponse(req , function(err, result){
+      req.method = "POST";
+      invokeandProcessResponse(req , function(err, result){
+      console.log("Inside second callback");
+      console.log(result.message);
       var newResult = ({message : result.message});
       res.status(result.returnStatus);
       res.send(newResult);
-      callback(null, response.body);
-    });
-  }
-  else
-  {
-    console.log('417');
-    res.status(417);
-    res.json({ message: 'Expectation Failed. Adding course to a student that does not exist'});
-  }
+      //callback(null, response.body);
+      });
+    }
+    else
+    {
+    console.log('404');
+    res.status(404);
+    res.json({ message: 'Expectation Failed. Adding student to a course that does not exist or student is invalid'});
+    }
   });
 });
 

@@ -167,7 +167,9 @@ router.route('/student/:student_id')
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/student/:student_id/course')
     .post(function(req, res) {
+      console.log("Entering post of student router");
       invokeandProcessResponse(req , function(err, result){
+        console.log("Return status " + result.returnStatus);
         res.status(result.returnStatus);
         res.send(result);
       });

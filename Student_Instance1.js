@@ -188,6 +188,7 @@ router.route('/student/:student_id')
 router.route('/student/:student_id/course')
 
 .post(function(req, res) {
+  console.log("Entering Post of Student Instance 1");
   student.addCoursetoStudent(req, res, handleResult);
   function handleResult(response)
   {

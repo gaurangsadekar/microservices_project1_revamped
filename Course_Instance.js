@@ -58,20 +58,20 @@ router.route('/course')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Course added!'});
+            res.json({ message: 'Course added!', returnStatus : '200'});
 
           }
 
           else if(response.statusCode == 500){
             console.log('500');
             res.status(500);
-            res.json({ message: 'Internal Server Error!'});
+            res.json({ message: 'Internal Server Error!', returnStatus : '500'});
 
           }
            else if(response.statusCode == 409){
             console.log('409');
             res.status(409);
-            res.json({ message: 'Course already exists.'});
+            res.json({ message: 'Course already exists.', returnStatus : '409'});
 
           }
         }
@@ -94,8 +94,8 @@ router.route('/course/:course_id')
                 console.error(err.stack || err.message);
                 return;
             }
-            res.json(response.body);
-           console.log("Request handled");
+  
+
         }// Logic to show course details
     })
 	// update the student with this id (accessed at PUT http://localhost:16390/api/course/:course_id)
@@ -109,26 +109,26 @@ router.route('/course/:course_id')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Course updated!'});
+            res.json({ message: 'Course updated!', returnStatus : '200'});
 
           }
 
           else if(response.statusCode == 500){
             console.log('500');
             res.status(500);
-            res.json({ message: 'Internal Server Error!'});
+            res.json({ message: 'Internal Server Error!', returnStatus : '500'});
 
           }
            else if(response.statusCode == 400){
             console.log('400');
             res.status(400);
-            res.json({ message: 'Bad request. Please check body parameters.'});
+            res.json({ message: 'Bad request. Please check body parameters.', returnStatus : '400'});
 
           }
             else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Updating a course that does not exist'});
+            res.json({ message: 'Updating a course that does not exist', returnStatus : '417'});
           }
         }
     })
@@ -145,20 +145,20 @@ router.route('/course/:course_id')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Successfully deleted course'});
+            res.json({ message: 'Successfully deleted course', returnStatus : '200'});
 
           }
 
           else if(response.statusCode == 500){
             console.log('500');
             res.status(500);
-            res.json({ message: 'Internal Server Error!'});
+            res.json({ message: 'Internal Server Error!', returnStatus : '500'});
 
           }
            else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Expectation Failed. Deleting a course that does not exist'});
+            res.json({ message: 'Expectation Failed. Deleting a course that does not exist', returnStatus : '417'});
 
           }
         }
@@ -178,24 +178,24 @@ router.route('/course/:course_id/student')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Course added!'});
+            res.json({ message: 'Course added!', returnStatus : '200'});
 
           }
 
           else if(response.statusCode == 500){
             console.log('500');
             res.status(500);
-            res.json({ message: 'Internal Server Error!'});
+            res.json({ message: 'Internal Server Error!', returnStatus : '500'});
 
           }
            else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Expectation Failed. Adding Student to Course that does not exist.'});
+            res.json({ message: 'Expectation Failed. Adding Student to Course that does not exist.', returnStatus : '417'});
 
           }
         }
-
+      });
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/course/:course_id/student/:student_id')
 
@@ -212,20 +212,20 @@ router.route('/course/:course_id/student')
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Course updated!'});
+            res.json({ message: 'Course updated!', returnStatus : '200'});
 
           }
 
           else if(response.statusCode == 500){
             console.log('500');
             res.status(500);
-            res.json({ message: 'Internal Server Error!'});
+            res.json({ message: 'Internal Server Error!', returnStatus : '500'});
 
           }
            else if(response.statusCode == 417){
             console.log('417');
             res.status(417);
-            res.json({ message: 'Expectation Failed. Invalid operation'});
+            res.json({ message: 'Expectation Failed. Invalid operation', returnStatus : '417'});
 
           }
         }

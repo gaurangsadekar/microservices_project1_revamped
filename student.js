@@ -49,7 +49,7 @@ exports.addCoursetoStudent = function(req,res,callback)
 {
 var lname = req.body.lname;
 var courseno = req.body.courseno;
-
+console.log("Entering add course to student student.js")
 var queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname], function(err, result){
 rowCount = result.rows.length;
 if(rowCount == 0)
@@ -92,6 +92,8 @@ callback(res);
 
 });
 }
+res.status(417);
+callback(res);
 });
 }
 
