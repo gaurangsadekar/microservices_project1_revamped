@@ -183,10 +183,27 @@ router.route('/student/:student_id')
 //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
 router.route('/student/:student_id/course')
 .post(function(req, res) {
-  invokeandProcessResponse(req , function(err, result){
-    var newResult = ({message : result.message});
-    res.status(result.returnStatus);
-    res.send(newResult);
+  bodyParameters = req.body;
+  var courseno = bodyParameters.courseno;
+  request({ url : "http://localhost:16390/api/course/" + courseno,
+    method : GET,
+    json : bodyParameters
+  }, function (error, response, body) {
+    if(response.statusCode == 200)
+    {
+    invokeandProcessResponse(req , function(err, result){
+      var newResult = ({message : result.message});
+      res.status(result.returnStatus);
+      res.send(newResult);
+      callback(null, response.body);
+    });
+  }
+  else
+  {
+    console.log('417');
+    res.status(417);
+    res.json({ message: 'Expectation Failed. Adding student to a course that does not exist'});
+  }
   });
 });
 //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
@@ -249,11 +266,27 @@ router.route('/course/:course_id')
 router.route('/course/:course_id/student')
 // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
 .post(function(req, res) {
-
-  invokeandProcessResponse(req , function(err, result){
-    var newResult = ({message : result.message});
-    res.status(result.returnStatus);
-    res.send(newResult);
+  bodyParameters = req.body;
+  var studentId = bodyParameters.sid;
+  request({ url : "http://localhost:16385/api/student/" + studentId,
+    method : GET,
+    json : bodyParameters
+  }, function (error, response, body) {
+    if(response.statusCode == 200)
+    {
+    invokeandProcessResponse(req , function(err, result){
+      var newResult = ({message : result.message});
+      res.status(result.returnStatus);
+      res.send(newResult);
+      callback(null, response.body);
+    });
+  }
+  else
+  {
+    console.log('417');
+    res.status(417);
+    res.json({ message: 'Expectation Failed. Adding course to a student that does not exist'});
+  }
   });
 });
 
