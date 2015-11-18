@@ -223,14 +223,14 @@ exports.deleteStudent = function(req, res, callback)
 
 
 
-exports.deleteCourseFromStudent = function(req)
+exports.deleteCourseFromStudent = function(req, res, callback)
 {
 
 var courseno = req.params.course_id;
 var lname = req.params.student_id;
 var queryForCourseStudentDatabase;
 var query;
-
+var flag = false;
 var queryForCheckingExistenceOfPair;
 
 
@@ -239,6 +239,7 @@ if(lname == 'All')
     queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 limit 1", [courseno]);
     queryForCheckingExistenceOfPair.on('row', function(row){
 
+    flag = true;
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
     query = client.query(queryForCourseStudentDatabase, [courseno]);
 
@@ -255,6 +256,18 @@ if(lname == 'All')
 	console.log("Row successfully deleted");
 	//client.end();
 });
+});
+    queryForCheckingExistenceOfPair.on('end', function(result){
+
+	if(flag)
+	{
+	res.status(200);
+    }
+    else
+    {
+     res.status(417);
+    }
+	callback(res);
 });
 }
 else
@@ -262,6 +275,7 @@ else
 	queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname]);
 	    queryForCheckingExistenceOfPair.on('row', function(row){
 
+	flag = true;
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
     query = client.query(queryForCourseStudentDatabase, [courseno]);
 
@@ -279,5 +293,18 @@ else
 	//client.end();
 });
 });
+	queryForCheckingExistenceOfPair.on('end', function(result){
+
+	if(flag)
+	{
+	res.status(200);
+    }
+    else
+    {
+     res.status(417);
+    }
+	callback(res);
+});
 }
+
 }
