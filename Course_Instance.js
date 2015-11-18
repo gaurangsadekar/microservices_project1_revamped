@@ -231,6 +231,71 @@ router.route('/course/:course_id/student')
         }
 
     });
+    router.route('/table/:tableName/column')
+
+    .post(function(req, res) {
+      //Add functionality here for adding column.
+      function handleResult(response)
+      {
+        console.log('Callback received');
+        console.log(response);
+        console.log("Status code " +response.statusCode);
+        if(response.statusCode == 200){
+          console.log('200');
+          res.status(200);
+          res.json({ message: 'Student updated!', returnStatus : '200'});
+        }
+
+        else if(response.statusCode == 500){
+          console.log('500');
+          res.status(500);
+          res.json({ message: 'Internal Server Error!', returnStatus : '500'});
+
+        }
+        else if(response.statusCode == 417){
+          console.log('417');
+          res.status(417);
+          res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
+
+        }
+      }
+
+
+
+
+      // res.json({ message: 'Added course to student'})
+    });
+
+
+    router.route('/table/:tableName/column/:columnId')
+
+    .delete(function(req, res) {
+      //Add functionality here for removing column.
+      function handleResult(response)
+      {
+        console.log('Callback received');
+        console.log(response);
+        console.log("Status code " +response.statusCode);
+        if(response.statusCode == 200){
+          console.log('200');
+          res.status(200);
+          res.json({ message: 'Student updated!', returnStatus : '200'});
+        }
+
+        else if(response.statusCode == 500){
+          console.log('500');
+          res.status(500);
+          res.json({ message: 'Internal Server Error!', returnStatus : '500'});
+
+        }
+        else if(response.statusCode == 417){
+          console.log('417');
+          res.status(417);
+          res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
+
+        }
+      }// res.json({ message: 'Added course to student'})
+    });
 
 // Listening for RI scenes
 var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});
