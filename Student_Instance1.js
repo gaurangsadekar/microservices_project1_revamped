@@ -7,7 +7,7 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-
+var configSchema = require('./config_student.js');
 var student = require('./student.js');
 
 
@@ -224,27 +224,20 @@ router.route('/table/:tableName/column')
 
 .post(function(req, res) {
   //Add functionality here for adding column.
+  configSchema.addColumn(req,res,handleResult);
   function handleResult(response)
   {
-    console.log('Callback received');
-    console.log(response);
     console.log("Status code " +response.statusCode);
     if(response.statusCode == 200){
       console.log('200');
       res.status(200);
-      res.json({ message: 'Student updated!', returnStatus : '200'});
+      res.json({ message: 'Student schema updated', returnStatus : '200'});
     }
 
     else if(response.statusCode == 500){
       console.log('500');
       res.status(500);
       res.json({ message: 'Internal Server Error!', returnStatus : '500'});
-
-    }
-    else if(response.statusCode == 417){
-      console.log('417');
-      res.status(417);
-      res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
 
     }
   }
