@@ -7,6 +7,7 @@ var redis = require('redis');
 var request = require('request');
 
 var config = require('./config_course.json');
+var configSchema = require('./config_course.js');
 var arr = Object.keys(config).map(function(k) { return config[k] });
 
 // configure app to use bodyParser()
@@ -87,17 +88,35 @@ router.route('/course/:course_id')
     .get(function(req, res) {
 
         course.getCourseDetails(req,res,handleResult);
-        function handleResult(response, err)
+        function handleResult(response, body, err)
         {
             if(err)
             {
                 console.error(err.stack || err.message);
                 return;
             }
-  
+            else {
 
-        }// Logic to show course details
-    })
+                console.log("After parse" + body.cid);
+                if(response.statusCode == 200){
+                  console.log('200');
+                  res.status(200);
+                  res.json({ message: body, returnStatus : '200'});
+
+                }
+
+                else if(response.statusCode == 404){
+                  console.log('404');
+                  res.status(404);
+                  res.json({ message: 'Does not exist', returnStatus : '404'});
+
+                }
+
+              }
+
+        }
+
+        })
 	// update the student with this id (accessed at PUT http://localhost:16390/api/course/:course_id)
     .put(function(req, res) {
     	//Logic to update student details
@@ -140,7 +159,7 @@ router.route('/course/:course_id')
     	 function handleResult(response)
         {
           console.log('Callback received');
-          console.log(response);
+
           console.log("Status code " +response.statusCode);
           if(response.statusCode == 200){
             console.log('200');
@@ -173,12 +192,12 @@ router.route('/course/:course_id/student')
          function handleResult(response)
         {
           console.log('Callback received');
-          console.log(response);
+
           console.log("Status code " +response.statusCode);
           if(response.statusCode == 200){
             console.log('200');
             res.status(200);
-            res.json({ message: 'Course added!', returnStatus : '200'});
+            res.json({ message: 'Student added to course!', returnStatus : '200'});
 
           }
 
@@ -196,6 +215,7 @@ router.route('/course/:course_id/student')
           }
         }
       });
+
     //API end point to get student details (accessed at POST http://localhost:8080/api/student/id)
     router.route('/course/:course_id/student/:student_id')
 
@@ -207,7 +227,7 @@ router.route('/course/:course_id/student')
      function handleResult(response)
         {
           console.log('Callback received');
-          console.log(response);
+
           console.log("Status code " +response.statusCode);
           if(response.statusCode == 200){
             console.log('200');
@@ -231,31 +251,26 @@ router.route('/course/:course_id/student')
         }
 
     });
+
+
     router.route('/table/:tableName/column')
 
     .post(function(req, res) {
       //Add functionality here for adding column.
+      configSchema.addColumn(req, res, handleResult);
       function handleResult(response)
       {
-        console.log('Callback received');
-        console.log(response);
         console.log("Status code " +response.statusCode);
         if(response.statusCode == 200){
           console.log('200');
           res.status(200);
-          res.json({ message: 'Student updated!', returnStatus : '200'});
+          res.json({ message: 'Course Schema updated!', returnStatus : '200'});
         }
 
         else if(response.statusCode == 500){
           console.log('500');
           res.status(500);
           res.json({ message: 'Internal Server Error!', returnStatus : '500'});
-
-        }
-        else if(response.statusCode == 417){
-          console.log('417');
-          res.status(417);
-          res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
 
         }
       }
@@ -271,15 +286,16 @@ router.route('/course/:course_id/student')
 
     .delete(function(req, res) {
       //Add functionality here for removing column.
+      configSchema.deleteColumn(req, res, handleResult);
       function handleResult(response)
       {
         console.log('Callback received');
-        console.log(response);
+
         console.log("Status code " +response.statusCode);
         if(response.statusCode == 200){
           console.log('200');
           res.status(200);
-          res.json({ message: 'Student updated!', returnStatus : '200'});
+          res.json({ message: 'Column deleted!', returnStatus : '200'});
         }
 
         else if(response.statusCode == 500){
@@ -297,11 +313,12 @@ router.route('/course/:course_id/student')
       }// res.json({ message: 'Added course to student'})
     });
 
-// Listening for RI scenes
+//Listening for RI scenes
 var subscriber = redis.createClient(6379, 'localhost' , {no_ready_check: true});
 subscriber.on('connect', function() {
     console.log('Connected to Subscriber Redis');
 });
+
 
 subscriber.on("message", function(channel, message) {
   console.log("Message '" + message + "' on channel '" + channel + "' arrived!")

@@ -7,7 +7,7 @@
 var express    = require('express');        // call express
 var app        = express();                 // define our app using express
 var bodyParser = require('body-parser');
-
+var configSchema = require('./config_student.js');
 var student = require('./student.js');
 
 
@@ -58,7 +58,6 @@ router.route('/student')
   function handleResult(response)
   {
     console.log('Callback received');
-    console.log(response);
     console.log("Status code " +response.statusCode);
     if(response.statusCode == 200){
       console.log('200');
@@ -93,16 +92,34 @@ router.route('/student/:student_id')
 
   // Logic to show student here
   student.getStudentDetails(req,res,handleResult);
-  function handleResult(response, err)
+  function handleResult(response, body, err)
   {
-    if(err)
-    {
-      console.error(err.stack || err.message);
-      return;
-    }
-    res.json(response.body);
-    console.log("Request handled");
+      if(err)
+      {
+          console.error(err.stack || err.message);
+          return;
+      }
+      else {
+
+          console.log("After parse" + body.cid);
+          if(response.statusCode == 200){
+            console.log('200');
+            res.status(200);
+            res.json({ message: body, returnStatus : '200'});
+
+          }
+
+          else if(response.statusCode == 404){
+            console.log('404');
+            res.status(404);
+            res.json({ message: 'Does not exist', returnStatus : '404'});
+
+          }
+
+        }
+
   }
+
 })
 
 
@@ -112,7 +129,6 @@ router.route('/student/:student_id')
   function handleResult(response)
   {
     console.log('Callback received');
-    console.log(response);
     console.log("Status code " +response.statusCode);
     if(response.statusCode == 200){
       console.log('200');
@@ -132,7 +148,7 @@ router.route('/student/:student_id')
     else if(response.statusCode == 417){
       console.log('417');
       res.status(417);
-      res.json({ message: 'Expectation Failed. Deleting a student that does not exist', returnStatus : '417'});
+      res.json({ message: 'Cannot delete a student that does not exist', returnStatus : '417'});
 
     }
   }
@@ -173,7 +189,7 @@ router.route('/student/:student_id')
     else if(response.statusCode == 417){
       console.log('417');
       res.status(417);
-      res.json({ message: 'Updating a student that does not exist', returnStatus : '417'});
+      res.json({ message: 'Cannot update a student that does not exist', returnStatus : '417'});
 
     }
 
@@ -193,7 +209,6 @@ router.route('/student/:student_id/course')
   function handleResult(response)
   {
     console.log('Callback received');
-    console.log(response);
     console.log("Status code " +response.statusCode);
     if(response.statusCode == 200){
       console.log('200');
@@ -211,7 +226,7 @@ router.route('/student/:student_id/course')
     else if(response.statusCode == 417){
       console.log('417');
       res.status(417);
-      res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
+      res.json({ message: 'Invalid operation. Either student does not exist or student is already enrolled in the course.', returnStatus : '417'});
 
     }
   }
@@ -225,27 +240,20 @@ router.route('/table/:tableName/column')
 
 .post(function(req, res) {
   //Add functionality here for adding column.
+  configSchema.addColumn(req,res,handleResult);
   function handleResult(response)
   {
-    console.log('Callback received');
-    console.log(response);
     console.log("Status code " +response.statusCode);
     if(response.statusCode == 200){
       console.log('200');
       res.status(200);
-      res.json({ message: 'Student updated!', returnStatus : '200'});
+      res.json({ message: 'Student schema updated', returnStatus : '200'});
     }
 
     else if(response.statusCode == 500){
       console.log('500');
       res.status(500);
       res.json({ message: 'Internal Server Error!', returnStatus : '500'});
-
-    }
-    else if(response.statusCode == 417){
-      console.log('417');
-      res.status(417);
-      res.json({ message: 'Expectation Failed. Invalid Operation.', returnStatus : '417'});
 
     }
   }
@@ -261,6 +269,7 @@ router.route('/table/:tableName/column/:columnId')
 
 .delete(function(req, res) {
   //Add functionality here for removing column.
+  configSchema.deleteColumn(req,res,handleResult);
   function handleResult(response)
   {
     console.log('Callback received');
@@ -269,7 +278,7 @@ router.route('/table/:tableName/column/:columnId')
     if(response.statusCode == 200){
       console.log('200');
       res.status(200);
-      res.json({ message: 'Student updated!', returnStatus : '200'});
+      res.json({ message: 'Table updated!', returnStatus : '200'});
     }
 
     else if(response.statusCode == 500){
@@ -298,13 +307,33 @@ router.route('/student/:student_id/course/:course_id')
 // })
 .delete(function(req, res) {
 
-  student.deleteCourseFromStudent(req);
-  res.status(200);
-  res.json({ message: 'Student updated!' , returnStatus: '200'});
-});
+  student.deleteCourseFromStudent(req, res, handleResult);
+  function handleResult(response)
+  {
+    console.log('Callback received');
+    console.log("Status code " +response.statusCode);
+    if(response.statusCode == 200){
+      console.log('200');
+      res.status(200);
+      res.json({ message: 'Student updated!', returnStatus : '200'});
+    }
+
+    else if(response.statusCode == 500){
+      console.log('500');
+      res.status(500);
+      res.json({ message: 'Internal Server Error!', returnStatus : '500'});
+
+    }
+    else if(response.statusCode == 417){
+      console.log('417');
+      res.status(417);
+      res.json({ message: 'Invalid Operation. Either student does not exist or student is not enrolled in the course', returnStatus : '417'});
+
+    }
+  }
 //res.json({ message: 'Course deleted from student'})
 
-
+});
 
 
 // REGISTER OUR ROUTES -------------------------------

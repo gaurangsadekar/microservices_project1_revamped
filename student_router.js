@@ -112,7 +112,7 @@ router.route('/studentRouter/:ruleId')
     var query = client.query("update tbl_rules set instancetorouteto=$1 where ruleid=$2", [req.body['instanceurl'],req.url.split('/')[2]]);
     query.on('end', function(result) {
         console.log("Updated " + req.body['instanceurl'] + " with rule id " + req.url.split('/')[2]);
-          res.json({message : 'Updated'});
+          res.json({message : 'Router has been updated'});
     });
   //     res.json({ message: 'Student created!' });
   //Logic to save the student to db

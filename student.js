@@ -49,11 +49,13 @@ exports.addCoursetoStudent = function(req,res,callback)
 {
 var lname = req.body.lname;
 var courseno = req.body.courseno;
-console.log("Entering add course to student student.js")
+
 var queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname], function(err, result){
 rowCount = result.rows.length;
+var flag = false;
 if(rowCount == 0)
 {
+	flag = true;
 var query = client.query("insert into ms_student_course_tbl values($1, $2)", [lname,courseno], function(err)
 {
 
@@ -64,7 +66,7 @@ var query = client.query("insert into ms_student_course_tbl values($1, $2)", [ln
 	}
 	else
 	{
-		query.on('end', function(error, result) {
+		query.on('end', function(result,error) {
 
 			if(error)
 			{
@@ -92,8 +94,14 @@ callback(res);
 
 });
 }
+
+if(flag==false){
 res.status(417);
 callback(res);
+
+}
+
+
 });
 }
 
@@ -102,6 +110,7 @@ exports.getStudentDetails = function(req,res,callback)
 {
 var course_nos = [];
 var responseJson;
+var body='';
 console.log('Connected to database');
 console.log(req.params.student_id);
 var flag = false;
@@ -112,20 +121,23 @@ query.on('row', function(row) {
 	flag = true;
 	console.log(row.courseno);
 	course_nos.push(row.courseno);
-	responseJson = "{'fname':"+ row.fname + ", 'lname':" + req.params.student_id + ", 'sid':"+ row.sid + ", 'phno' :" + row.phno + ", 'degree_level':" + row.degree_level + ", 'year' :" + row.year + ", 'address':" + row.address + ", 'course_nos': " + course_nos + "}";
+	responseJson = {fname: row.fname , lname:  req.params.student_id  , sid: row.sid  , phno :  row.phno  , degree_level:  row.degree_level  , year :  row.year  , address:  row.address  , course_nos:   course_nos  };
   });
 query.on('end', function(result){
 
 	if(flag)
 	{
 	console.log(responseJson);
-	res.json(responseJson);
+	body = responseJson;
+	res.status(200);
     }
     else
     {
-     res.json({message:'Student does not exist', returnStatus : '404'});
+    body = 'Student does not exist';
+	res.status(404);
+
     }
-	callback(res);
+	callback(res,body);
 });
 }
 
@@ -225,14 +237,14 @@ exports.deleteStudent = function(req, res, callback)
 
 
 
-exports.deleteCourseFromStudent = function(req)
+exports.deleteCourseFromStudent = function(req, res, callback)
 {
 
 var courseno = req.params.course_id;
 var lname = req.params.student_id;
 var queryForCourseStudentDatabase;
 var query;
-
+var flag = false;
 var queryForCheckingExistenceOfPair;
 
 
@@ -241,6 +253,7 @@ if(lname == 'All')
     queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 limit 1", [courseno]);
     queryForCheckingExistenceOfPair.on('row', function(row){
 
+    flag = true;
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
     query = client.query(queryForCourseStudentDatabase, [courseno]);
 
@@ -257,6 +270,18 @@ if(lname == 'All')
 	console.log("Row successfully deleted");
 	//client.end();
 });
+});
+    queryForCheckingExistenceOfPair.on('end', function(result){
+
+	if(flag)
+	{
+	res.status(200);
+    }
+    else
+    {
+     res.status(417);
+    }
+	callback(res);
 });
 }
 else
@@ -264,6 +289,7 @@ else
 	queryForCheckingExistenceOfPair = client.query("select * from ms_student_course_tbl where courseno = $1 and lname = $2", [courseno, lname]);
 	    queryForCheckingExistenceOfPair.on('row', function(row){
 
+	flag = true;
     queryForCourseStudentDatabase = 'Delete from ms_student_course_tbl where courseno = $1';
     query = client.query(queryForCourseStudentDatabase, [courseno]);
 
@@ -281,5 +307,18 @@ else
 	//client.end();
 });
 });
+	queryForCheckingExistenceOfPair.on('end', function(result){
+
+	if(flag)
+	{
+	res.status(200);
+    }
+    else
+    {
+     res.status(417);
+    }
+	callback(res);
+});
 }
+
 }

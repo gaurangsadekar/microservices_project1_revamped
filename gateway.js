@@ -149,6 +149,8 @@ var invokeandProcessResponse = function(req, callback){
     method : req.method,
     json : bodyParameters
   }, function (error, response, body) {
+    console.log(response.body);
+
       callback(null, response.body);
   })
 }
@@ -186,6 +188,7 @@ router.route('/student/:student_id')
 // get the student with that id (accessed at GET http://localhost:8080/api/student/:student_id)
 .get(function(req, res) {
   invokeandProcessResponse(req , function(err, result){
+    result = JSON.parse(result);
     var newResult = ({message : result.message});
     res.status(result.returnStatus);
     res.send(newResult);
@@ -281,6 +284,7 @@ router.route('/course/:course_id')
 // get the student with that id (accessed at GET http://localhost:8080/api/course/:course_id)
 .get(function(req, res) {
   invokeandProcessResponse(req , function(err, result){
+    result = JSON.parse(result);
     var newResult = ({message : result.message});
     res.status(result.returnStatus);
     res.send(newResult);
